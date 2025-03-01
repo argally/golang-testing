@@ -97,5 +97,5 @@ func intro() {
 }
 
 func prompt() {
-	fmt.Print("-> ")
+	fmt.Print("--> ")
 }
