@@ -53,7 +53,6 @@ jobs:
       uses: thollander/actions-comment-pull-request@v3
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
-        comment-tag: coverage-report
         pr-number: ${{ github.event.pull_request.number }}
         message: |
           go-test-coverage report:
