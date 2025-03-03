@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"io"
 	"os"
 	"strings"
@@ -42,7 +43,34 @@ func Test_isPrime(t *testing.T) {
 	}
 }
 
-func Test_intfo(t *testing.T) {
+func Test_checkNumbers(t *testing.T) {
+
+	checknumberTests := []struct {
+		name     string
+		input    string
+		expected string
+	}{
+		{"empty", "", "Please enter a whole number"},
+		{"q", "q", ""},
+		{"prime", "7", "7 is a prime number"},
+		{"not prime", "8", "8 is not a prime number as it is divisible by 2"},
+		{"negative", "-1", "-1 is a negative number and not a prime"},
+		{"zero", "0", "0 is not a prime number"},
+	}
+
+	for _, entry := range checknumberTests {
+		input := strings.NewReader(entry.input)
+		reader := bufio.NewScanner(input)
+		res, _ := checkNumbers(reader)
+		if !strings.EqualFold((res), entry.expected) {
+			t.Errorf("%s expected %s but got %s", entry.name, entry.expected, res)
+		}
+	}
+	//bufio.NewScanner takes an io.Reader as an argument
+	// so we can use strings.NewReader which satisfies the io.Reader interface
+}
+
+func Test_intro(t *testing.T) {
 	//save a copy of os.stdout
 	oldOut := os.Stdout
 	//This line creates a pipe using `os.Pipe()`,
