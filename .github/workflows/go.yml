@@ -42,18 +42,19 @@ jobs:
     - name: Test
       run: sudo go test -race -json -v -coverprofile=coverage.txt ./... 2>&1 | tee /tmp/gotest.log | gotestfmt
 
-    - name: check test coverage
+    - name: coverage
+      id: coverage
       uses: vladopajic/go-test-coverage@v2
       with:
         config: ./.github/.testcoverage.yml
 
     - name: post coverage report
-      if: env.pull_request_id
+      if: github.event_name == 'pull_request'
       uses: thollander/actions-comment-pull-request@v3
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         comment-tag: coverage-report
-        pr-number: ${{ env.pull_request_id }}
+        pr-number: ${{ github.event.pull_request.number }}
         message: |
           go-test-coverage report:
           ``` 
