@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"io"
 	"os"
 	"strconv"
 	"strings"
@@ -14,7 +15,7 @@ func main() { // coverage-ignore
 	//create a channel to indicate the end of the program
 	doneChan := make(chan bool)
 	//start a gorouting to read user input and run program
-	go readUserInput(doneChan)
+	go readUserInput(os.Stdin, doneChan)
 	//block until the doneChan gets a value
 	<-doneChan
 	//close channel and say goodbye
@@ -26,8 +27,9 @@ func main() { // coverage-ignore
 // readUserInput reads user input from the standard input (stdin) and sends a signal
 // to the provided doneChan channel when the reading is complete.
 
-func readUserInput(doneChan chan bool) {
-	scanner := bufio.NewScanner(os.Stdin)
+// refactoring to pass in io.Reader which has Read method that satisfies the bufio.NewScanner
+func readUserInput(in io.Reader, doneChan chan bool) {
+	scanner := bufio.NewScanner(in)
 
 	// **Exit Condition**: The `checkNumbers` function returns two values:
 	// a result message (`res`) and a boolean (`done`). If `done` is `true`,

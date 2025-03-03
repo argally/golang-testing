@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"io"
 	"os"
 	"strings"
@@ -43,6 +44,22 @@ func Test_isPrime(t *testing.T) {
 	}
 }
 
+func Test_readUserInput(t *testing.T) {
+	// to test this fucntion we need a channel
+	// we also need instance of io.Reader
+	doneChan := make(chan bool)
+	//create reference to bytes.Buffer and assign it to stdin
+	//bytes.Buffer implements the io.Reader interface
+	var stdin bytes.Buffer
+	// simulate user typing 1 then return then q and return
+	stdin.Write([]byte("1\nq\n"))
+
+	go readUserInput(&stdin, doneChan)
+	<-doneChan
+	close(doneChan)
+
+}
+
 func Test_checkNumbers(t *testing.T) {
 
 	checknumberTests := []struct {
@@ -51,23 +68,27 @@ func Test_checkNumbers(t *testing.T) {
 		expected string
 	}{
 		{"empty", "", "Please enter a whole number"},
-		{"q", "q", ""},
+		{"quit", "q", ""},
+		{"QUIT", "Q", ""},
 		{"prime", "7", "7 is a prime number"},
 		{"not prime", "8", "8 is not a prime number as it is divisible by 2"},
 		{"negative", "-1", "-1 is a negative number and not a prime"},
 		{"zero", "0", "0 is not a prime number"},
+		{"invalid", "three", "Please enter a whole number"},
+		{"decimal", "3.14", "Please enter a whole number"},
+		{"greek", "εβδομάδα", "Please enter a whole number"},
 	}
 
 	for _, entry := range checknumberTests {
+		//bufio.NewScanner takws an io.Reader as an argument
 		input := strings.NewReader(entry.input)
+		// so we can use strings.NewReader which satisfies the io.Reader interface
 		reader := bufio.NewScanner(input)
 		res, _ := checkNumbers(reader)
 		if !strings.EqualFold((res), entry.expected) {
 			t.Errorf("%s expected %s but got %s", entry.name, entry.expected, res)
 		}
 	}
-	//bufio.NewScanner takes an io.Reader as an argument
-	// so we can use strings.NewReader which satisfies the io.Reader interface
 }
 
 func Test_intro(t *testing.T) {
