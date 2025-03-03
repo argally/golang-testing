@@ -52,7 +52,7 @@ func Test_readUserInput(t *testing.T) {
 	//bytes.Buffer implements the io.Reader interface
 	var stdin bytes.Buffer
 	// simulate user typing 1 then return then q and return
-	stdin.Write([]byte("1\nq\n"))
+	stdin.Write([]byte("7\nq\n"))
 
 	go readUserInput(&stdin, doneChan)
 	<-doneChan
