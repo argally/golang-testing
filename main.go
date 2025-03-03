@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-func main() {
+func main() { // coverage-ignore
 	//Print a welcome message
 	intro()
 	//create a channel to indicate the end of the program
