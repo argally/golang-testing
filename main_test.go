@@ -3,6 +3,7 @@ package main
 import (
 	"io"
 	"os"
+	"strings"
 	"testing"
 )
 
@@ -39,6 +40,30 @@ func Test_isPrime(t *testing.T) {
 			t.Errorf("Test case %s failed: expected %s, got %s", entry.name, entry.msg, msg)
 		}
 	}
+}
+
+func Test_intfo(t *testing.T) {
+	//save a copy of os.stdout
+	oldOut := os.Stdout
+	//This line creates a pipe using `os.Pipe()`,
+	// which returns a pair of file descriptors: `r` (read end) and `w` (write end).
+	// This pipe will be used to capture the output of the `prompt` function.
+	r, w, _ := os.Pipe()
+	//set os.stdout to the write pipe
+	os.Stdout = w
+	intro()
+	//close the write pipe
+	_ = w.Close()
+	//reset os.stdout to what it was before
+	os.Stdout = oldOut
+	//This line reads all the data from the read end of the pipe (`r`) using `io.ReadAll`.
+	// The captured output is stored in the variable `out`.
+	out, _ := io.ReadAll(r)
+	//check if the output is as expected
+	if !strings.Contains(string(out), "Is it prime?") {
+		t.Errorf("Incorrect intro text not correct %s", string(out))
+	}
+
 }
 
 func Test_prompt(t *testing.T) {
