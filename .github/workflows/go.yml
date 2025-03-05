@@ -41,10 +41,10 @@ jobs:
 
 
     - name: Build
-      run: go build -v ./...
+      run: find . -name go.mod -execdir go build -v ./... \;
 
     - name: Test
-      run: sudo go test -race -json -v -coverprofile=coverage.txt ./... 2>&1 | tee /tmp/gotest.log | gotestfmt
+      run: sudo find . -name go.mod -execdir go test -race -json -v -coverprofile=coverage.txt ./... \;  2>&1 | tee /tmp/gotest.log | gotestfmt
 
     - name: coverage
       id: coverage
