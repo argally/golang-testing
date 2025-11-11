@@ -26,7 +26,7 @@ func main() { // coverage-ignore
 
 // readUserInput reads user input from the standard input (stdin) and sends a signal
 // to the provided doneChan channel when the reading is complete.
-
+//
 // refactoring to pass in io.Reader which has Read method that satisfies the bufio.NewScanner
 func readUserInput(in io.Reader, doneChan chan bool) {
 	scanner := bufio.NewScanner(in)
